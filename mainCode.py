@@ -3,12 +3,12 @@
 import random
 from matplotlib import pyplot
 import math
+from time import time
 
 
-
-found = False
-
-while not found:
+n = 3
+found = 0
+while found < n:
     converging = False
 
     # random starting point
@@ -82,9 +82,20 @@ while not found:
 
     # if chaotic behaviot has been found
     if not converging and lypaunov >= 10:
-        found = True
 
-print(len(x_list))
-pyplot.scatter(x_list[100:], y_list[100:], s=0.1)
-pyplot.show()
+         # update counter and have a little print message
+        found += 1
+        print(f"Found another strange attractor with L={lypaunov}!")
 
+        # clear figure
+        pyplot.clf()
+
+        # plot design
+        pyplot.style.use("dark_background")
+        pyplot.axis("off")
+
+        #create the plot
+        pyplot.scatter(x_list[100:], y_list[100:], s=0.1, c="white")
+
+        #save the figure
+        pyplot.savefig("search/" + str(time) + ".png", dpi = 200)
