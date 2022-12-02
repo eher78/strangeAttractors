@@ -2,6 +2,8 @@
 
 import random
 from matplotlib import pyplot
+import math
+
 
 
 found = False
@@ -10,9 +12,17 @@ while not found:
     converging = False
 
     # random starting point
-
     x = random.uniform(-0.5, 0.5)
     y = random.uniform(-0.5, 0.5)
+
+    # random alternative point nearby
+    xe = x + random.uniform(-0.5, 0.5) / 1000
+    ye = y + random.uniform(-0.5, 0.5) / 1000
+
+    # distance between two point
+    dx = xe - x 
+    dy = ye - y
+    d0 = math.sqrt(dx * dx - dy * dy)
 
     # random parameter vector 
     a = [random.uniform(-2, 2) for i in range(12)]
@@ -20,6 +30,10 @@ while not found:
     # lists to store the entire path
     x_list = [x]
     y_list = [y]
+
+    # initalize convergence boolean and lypaunov exponent
+    converging = False
+    lypaunov = 0
 
 
     # iteratively pass (x,y) into the quadratic map
@@ -39,6 +53,19 @@ while not found:
             converging = True
             break
 
+        # checks for chaotic behavior
+        if i > 1000:
+            # compute next alternative point (using the quadratic map)
+            xenew = a[0] + a[1]*xe + a[2]*xe*xe + a[3]*ye + a[4]*ye*ye + a[5]*xe*ye
+            yenew = a[6] + a[7]*xe + a[8]*xe*xe + a[9]*ye + a[10]*ye*ye + a[11]*xe*ye
+
+            # compute the distance between new points
+            dx = xenew - xe
+            dy = yenew - ye
+            d = math.sqrt(dx * dx - dy * dy)
+
+            # lypaynov exponent
+
         # update (x, y)
         x = xnew
         y = ynew
@@ -53,3 +80,4 @@ while not found:
 print(len(x_list))
 pyplot.scatter(x_list[100:], y_list[100:], s=0.1)
 pyplot.show()
+
