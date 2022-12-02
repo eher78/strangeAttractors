@@ -22,7 +22,7 @@ while not found:
     # distance between two point
     dx = xe - x 
     dy = ye - y
-    d0 = math.sqrt(dx * dx - dy * dy)
+    d0 = math.sqrt(dx * dx + dy * dy)
 
     # random parameter vector 
     a = [random.uniform(-2, 2) for i in range(12)]
@@ -60,11 +60,16 @@ while not found:
             yenew = a[6] + a[7]*xe + a[8]*xe*xe + a[9]*ye + a[10]*ye*ye + a[11]*xe*ye
 
             # compute the distance between new points
-            dx = xenew - xe
-            dy = yenew - ye
-            d = math.sqrt(dx * dx - dy * dy)
+            dx = xenew - xnew
+            dy = yenew - ynew
+            d = math.sqrt(dx * dx + dy * dy)
 
             # lypaynov exponent
+            lypaunov += math.log(abs(d/d0))
+
+            # rescale the alternative point
+            xe = xnew + d0*dx/d
+            ye = ynew + d0*dy/d
 
         # update (x, y)
         x = xnew
@@ -74,7 +79,9 @@ while not found:
         x_list.append(x)
         y_list.append(y)
 
-    if not converging:
+
+    # if chaotic behaviot has been found
+    if not converging and lypaunov >= 10:
         found = True
 
 print(len(x_list))
